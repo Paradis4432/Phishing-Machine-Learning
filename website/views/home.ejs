@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+</head>
+
+<body>
+    gap puto
+    <form id="checkValues">
+        <input type="number" id="ArrinUrls" placeholder="ArrinUrls">
+        <input type="number" id="Attachments" placeholder="Attachments">
+        <input type="number" id="Css" placeholder="Css">
+        <input type="number" id="Encoding" placeholder="Encoding">
+        <input type="number" id="External_Resources" placeholder="External_Resources">
+        <input type="number" id="Flash_content" placeholder="Flash_content">
+        <input type="number" id="HTML_content" placeholder="HTML_content">
+        <input type="number" id="HTML_Form" placeholder="HTML_Form">
+        <input type="number" id="HTML_iFrame" placeholder="HTML_iFrame">
+        <input type="number" id="IPsInURLs" placeholder="IPsInURLs">
+        <input type="number" id="Javascript" placeholder="Javascript">
+        <input type="number" id="URLs" placeholder="URLs">
+        <input type="submit" value="Check">
+    </form>
+
+    <p id="result">nothing yet</p>
+</body>
+
+</html>
+
+<script>
+    document.getElementById('checkValues').addEventListener('submit', function (e) {
+        e.preventDefault()
+        var ArrinUrls = document.getElementById("ArrinUrls").value
+        var Attachments = document.getElementById("Attachments").value
+        var Css = document.getElementById("Css").value
+        var Encoding = document.getElementById("Encoding").value
+        var External_Resources = document.getElementById("External_Resources").value
+        var Flash_content = document.getElementById("Flash_content").value
+        var HTML_content = document.getElementById("HTML_content").value
+        var HTML_Form = document.getElementById("HTML_Form").value
+        var HTML_iFrame = document.getElementById("HTML_iFrame").value
+        var IPsInURLs = document.getElementById("IPsInURLs").value
+        var Javascript = document.getElementById("Javascript").value
+        var URLs = document.getElementById("URLs").value
+
+        fetch('http://190.191.121.93:3001/check', {
+            method: 'POST', // or 'PUT'
+            //mode: 'no-cors',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                "ArrinUrls": ArrinUrls,
+                "Attachments": Attachments,
+                "Css": Css,
+                "Encoding": Encoding,
+                "External_Resources": External_Resources,
+                "Flash_content": Flash_content,
+                "HTML_content": HTML_content,
+                "HTML_Form": HTML_Form,
+                "HTML_iFrame": HTML_iFrame,
+                "IPsInURLs": IPsInURLs,
+                "Javascript": Javascript,
+                "URLs": URLs
+            }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                //make result and resul2 the return values 
+                document.getElementById('result').innerHTML = data.value
+
+            });
+    });
+</script>
