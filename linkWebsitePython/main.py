@@ -1,11 +1,14 @@
-import json, os, sys
+import json, os, sys, pickle
+import pandas as pd
 from flask import Flask, request
 from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
 CORS(app)
 
-import test as t
+#import test as t
+#import v1.ipynb as v1
+#from ipynb.fs.defs.v1 import test as te
 
 @app.route('/check', methods=['POST'])
 def check():
@@ -18,21 +21,55 @@ def check():
     
     #return json.dumps([num["value"], num["value2"]])
 
-    values = request.get_json()
-    ArrinUrls = values["ArrinUrls"]
-    Attachments = values["Attachments"]
-    Css = values["Css"]
-    Encoding = values["Encoding"]
-    External_Resources = values["External_Resources"]
-    Flash_content = values["Flash_content"]
-    HTML_content = values["HTML_content"]
-    HTML_Form = values["HTML_Form"]
-    HTML_iFrame = values["HTML_iFrame"]
-    IPsInURLs = values["IPsInURLs"]
-    Javascript = values["Javascript"]
-    URLs = values["URLs"]
+    #print("Starting check")
 
-    print(values)
+    valuesList = []
+    values = request.get_json()
+    valuesList.append(values["ArrinUrls"])
+    valuesList.append(values["Attachments"])
+    valuesList.append(values["Css"])
+    valuesList.append(values["Encoding"])
+    valuesList.append(values["External_Resources"])
+    valuesList.append(values["Flash_content"])
+    valuesList.append(values["HTML_content"])
+    valuesList.append(values["HTML_Form"])
+    valuesList.append(values["HTML_iFrame"])
+    valuesList.append(values["IPsInURLs"])
+    valuesList.append(values["Javascript"])
+    valuesList.append(values["URLs"])
+    #print("Values Set")
+
+    columns=["@ in URLs", "Attachments", 
+    "Css", "Encoding", "External Resources", "Flash content", "HTML content", "HTML Form",
+    "HTML iFrame", "IPs in URLs", "Javascript", "URLs"]
+    #print("Columns Set")
+    
+    df = pd.DataFrame({"id": [0]})
+    for value, colum in zip(valuesList, columns):
+        #print("Value:", value)
+        #print the type of the value
+        #print("Type:", type(value))
+        #print("Column:", colum)
+        df[colum] = int(value)
+    df = df.drop(columns=["id"])
+
+    #print("DataFrame:", df)
+    print(os.getcwd())
+
+    with open("./linkWebsitePython/modelLG_pkl", "rb") as f:
+        lgModel = pickle.load(f)
+    with open("./linkWebsitePython/modelKNN_pkl", "rb") as f:
+        knnModel = pickle.load(f)
+    with open("./linkWebsitePython/modelNB_pkl", "rb") as f:
+        nbModel = pickle.load(f)
+
+    LGpred = lgModel.predict(df.values)
+    KNNpred = knnModel.predict(df.values)
+    NBpred = nbModel.predict(df.values)
+    print("NBpred:", LGpred)
+    print("NBpred:", KNNpred)
+    print("NBpred:", NBpred)
+
 
     return json.dumps({
         "value" : 1,
