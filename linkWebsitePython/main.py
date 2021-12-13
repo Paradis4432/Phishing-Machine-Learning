@@ -1,4 +1,7 @@
-import json, os, sys, pickle
+import json
+import os
+import sys
+import pickle
 import pandas as pd
 from flask import Flask, request
 from flask_cors import CORS, cross_origin
@@ -10,19 +13,10 @@ CORS(app)
 #import v1.ipynb as v1
 #from ipynb.fs.defs.v1 import test as te
 
+
 @app.route('/check', methods=['POST'])
 def check():
-    #x = t.multiply(3,5)
-    #print(x)
-    #print("check called")
-    #print("num:", num["value"])
-    #print("num2:", num["value2"])
-    #multi = t.multiply(num["value"], num["value2"])
-    
-    #return json.dumps([num["value"], num["value2"]])
-
-    #print("Starting check")
-
+    # get the values from website
     valuesList = []
     values = request.get_json()
     valuesList.append(values["ArrinUrls"])
@@ -39,45 +33,64 @@ def check():
     valuesList.append(values["URLs"])
     #print("Values Set")
 
-    columns=["@ in URLs", "Attachments", 
-    "Css", "Encoding", "External Resources", "Flash content", "HTML content", "HTML Form",
-    "HTML iFrame", "IPs in URLs", "Javascript", "URLs"]
+    # define the column names for the dataframe
+    columns = ["@ in URLs", "Attachments",
+               "Css", "Encoding", "External Resources", "Flash content", "HTML content", "HTML Form",
+               "HTML iFrame", "IPs in URLs", "Javascript", "URLs"]
     #print("Columns Set")
-    
-    df = pd.DataFrame({"id": [0]})
+
+    dfWebsite = pd.DataFrame({"id": [0]})
     for value, colum in zip(valuesList, columns):
-        #print("Value:", value)
-        #print the type of the value
-        #print("Type:", type(value))
-        #print("Column:", colum)
-        df[colum] = int(value)
-    df = df.drop(columns=["id"])
+        dfWebsite[colum] = int(value)
 
-    #print("DataFrame:", df)
-    print(os.getcwd())
+    df = dfWebsite.drop(columns=["id"])
 
-    with open("./linkWebsitePython/modelLG_pkl", "rb") as f:
-        lgModel = pickle.load(f)
-    with open("./linkWebsitePython/modelKNN_pkl", "rb") as f:
-        knnModel = pickle.load(f)
-    with open("./linkWebsitePython/modelNB_pkl", "rb") as f:
-        nbModel = pickle.load(f)
+    #open and save the pickle models
+    with open("./pickleModels/LGmodel", "rb") as f:
+        LGmodel = pickle.load(f)
+    with open("./pickleModels/KNNmodel", "rb") as f:
+        KNNmodel = pickle.load(f)
+    with open("./pickleModels/NBmodel", "rb") as f:
+        NBmodel = pickle.load(f)
 
-    LGpred = lgModel.predict(df.values)
-    KNNpred = knnModel.predict(df.values)
-    NBpred = nbModel.predict(df.values)
-    print("NBpred:", LGpred)
-    print("NBpred:", KNNpred)
-    print("NBpred:", NBpred)
+    LGpred = LGmodel.predict(df.values)
+    KNNpred = KNNmodel.predict(df.values)
+    NBpred = NBmodel.predict(df.values)
 
+    # get the dataManager and a clean df to make a train test split to then get extra values
+    import sys
+    sys.path.append("./dataScience")
+    from dataScience import dataManager as dm
+    from dataScience import graphManager as gm
+    from sklearn.preprocessing import StandardScaler
+    from sklearn.model_selection import train_test_split
+
+    scaler = StandardScaler()
+
+    cleanDF = dm.getCleanData()
+
+    X = cleanDF.drop("Phishy", axis=1)
+    y = cleanDF["Phishy"]
+
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.25, random_state=1)
+    X_train = scaler.fit_transform(X_train)
+    X_test = scaler.transform(X_test)
+
+    # create mat 
+    matLG = gm.make7x7ConsusionMatrix(y_test, LGpred, "Logistic Regression", "Predicted", "Actual"
+    "./images/LG_ConfusionMatrixWebsiteValues.png")
+
+    print(matLG)
+    
 
     return json.dumps({
-        "value" : 1,
-        "value2" : 2
+        "value": 1,
+        "value2": 2
     })
 
-#@app.route("/", methods=['GET'])
-#def index():
+# @app.route("/", methods=['GET'])
+# def index():
 #    print("index called")
 #    return "index"
 
