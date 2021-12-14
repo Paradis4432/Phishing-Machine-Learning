@@ -63,7 +63,7 @@ def check():
     # ------
     # adaptar ruta para diferentes casos, desde users hasta la carpeta dataScience
     # ------
-    sys.path.append("/Users/LucasUser/Documents/GitHub/DHlastChallenge/dataScience")
+    sys.path.append("route from users to dataScience folder")
     import dataManager as dm
     import graphManager as gm
     import modelManager as mm
