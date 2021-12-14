@@ -43,50 +43,69 @@ def check():
     for value, colum in zip(valuesList, columns):
         dfWebsite[colum] = int(value)
 
-    df = dfWebsite.drop(columns=["id"])
+    dfWebsite = dfWebsite.drop(columns=["id"])
 
     #open and save the pickle models
-    with open("./pickleModels/LGmodel", "rb") as f:
-        LGmodel = pickle.load(f)
-    with open("./pickleModels/KNNmodel", "rb") as f:
-        KNNmodel = pickle.load(f)
-    with open("./pickleModels/NBmodel", "rb") as f:
-        NBmodel = pickle.load(f)
+    #with open("./pickleModels/LGmodel", "rb") as f:
+    #    LGmodel = pickle.load(f)
+    #with open("./pickleModels/KNNmodel", "rb") as f:
+    #    KNNmodel = pickle.load(f)
+    #with open("./pickleModels/NBmodel", "rb") as f:
+    #    NBmodel = pickle.load(f)
 
-    LGpred = LGmodel.predict(df.values)
-    KNNpred = KNNmodel.predict(df.values)
-    NBpred = NBmodel.predict(df.values)
+    #LGpred = LGmodel.predict(df.values)
+    #KNNpred = KNNmodel.predict(df.values)
+    #NBpred = NBmodel.predict(df.values)
 
     # get the dataManager and a clean df to make a train test split to then get extra values
     import sys
-    sys.path.append("./dataScience")
-    from dataScience import dataManager as dm
-    from dataScience import graphManager as gm
-    from sklearn.preprocessing import StandardScaler
-    from sklearn.model_selection import train_test_split
-
-    scaler = StandardScaler()
-
-    cleanDF = dm.getCleanData()
-
-    X = cleanDF.drop("Phishy", axis=1)
-    y = cleanDF["Phishy"]
-
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.25, random_state=1)
-    X_train = scaler.fit_transform(X_train)
-    X_test = scaler.transform(X_test)
-
-    # create mat 
-    matLG = gm.make7x7ConsusionMatrix(y_test, LGpred, "Logistic Regression", "Predicted", "Actual"
-    "./images/LG_ConfusionMatrixWebsiteValues.png")
-
-    print(matLG)
     
+    # ------
+    # adaptar ruta para diferentes casos, desde users hasta la carpeta dataScience
+    # ------
+    sys.path.append("/Users/LucasUser/Documents/GitHub/DHlastChallenge/dataScience")
+    import dataManager as dm
+    import graphManager as gm
+    import modelManager as mm
+    
+    #from sklearn.preprocessing import StandardScaler
+    #from sklearn.model_selection import train_test_split
+#
+    #scaler = StandardScaler()
+#
+    cleanDF = dm.getCleanData()
+#
+    #X = cleanDF.drop("Phishy", axis=1)
+    #y = cleanDF["Phishy"]
+#
+    #X_train, X_test, y_train, y_test = train_test_split(
+    #    X, y, test_size=0.25, random_state=1)
+    #X_train = scaler.fit_transform(X_train)
+    #X_test = scaler.transform(X_test)
+#
+    ## create mat 
+    #matLG = gm.make7x7ConsusionMatrix(y_test, LGpred, "Logistic Regression", "Predicted", "Actual",
+    #"./images/LG_ConfusionMatrixWebsiteValues.png", True, True)
+    #matKNN = gm.make7x7ConsusionMatrix(y_test, KNNpred, "KNN", "Predicted", "Actual",
+    #"./images/KNN_ConfusionMatrixWebsiteValues.png", True, True)
+    #matNB = gm.make7x7ConsusionMatrix(y_test, NBpred, "Naive Bayes", "Predicted", "Actual",
+    #"./images/NB_ConfusionMatrixWebsiteValues.png", True, True)
+#
+    #print(matLG)
+    #print(matKNN)
+    #print(matNB)
+    cleanDF.append(dfWebsite)
+    NBdict, NBpred = mm.makeNBmodel(cleanDF, "Phishy", True, True)
+    LGdict, LGpred = mm.makeLGmodel(cleanDF, "Phishy", True, True)
+    KNNdict, KNNpred = mm.makeKNNmodel(cleanDF, "Phishy", True, True)
 
     return json.dumps({
-        "value": 1,
-        "value2": 2
+        "NBdict": list(NBdict.items()),
+        "NBpred": NBpred.tolist(),
+        "LGdict": list(LGdict.items()),
+        "LGpred": LGpred.tolist(),
+        "KNNdict": list(KNNdict.items()),
+        "KNNpred": KNNpred.tolist()
     })
 
 # @app.route("/", methods=['GET'])

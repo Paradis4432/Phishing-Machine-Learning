@@ -66,7 +66,7 @@ def makeNBmodel(df, targetColumn, saveModel, returnDict):
             'Specificity': specificityNB,
             'Precision': precisionNB,
             'F1 Score': f1NB,
-        }
+        }, y_pred
 
 
 def findOptimalCvalueForLG(X_train, y_train):
@@ -142,7 +142,7 @@ def makeLGmodel(df, targetColumn, saveModel, returnDict):
             'Specificity': specificityLG,
             'Precision': precisionLG,
             'F1 Score': f1LG,
-        }
+        }, y_pred
 
 
 def findOptimalNeighborsForKNN(X_train, y_train):
@@ -216,4 +216,4 @@ def makeKNNmodel(df, targetColumn, saveModel, returnDict):
             'Specificity': specificityKNN,
             'Precision': precisionKNN,
             'F1 Score': f1KNN,
-        }
+        }, y_pred

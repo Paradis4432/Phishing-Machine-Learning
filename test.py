@@ -8,14 +8,8 @@ import seaborn as sns
 #create a random dataframe 
 df = pd.DataFrame(np.random.randn(10,4),columns=['a','b','c','d'])
 
-# %%
-df.a[0]
-
 #%%
-def testing():
-    return 3
+#import v1Test.ipynb
+from ipynb.fs.full.v1Test import *
 
 # %%
-lsita = [testing()]
-# %%
-lsita

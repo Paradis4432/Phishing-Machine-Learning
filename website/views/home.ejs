@@ -9,24 +9,33 @@
 </head>
 
 <body>
-    gap puto
+    <h1>Los valores no pueden ser nulos! </h1>
+    <h1>Phishying</h1>
+    <p>ArrinUrls = Boolean</p>
+    <p>Flash_content = Boolean</p>
+    <p>HTML_content = Boolean</p>
+    <p>HTML_Form = Boolean</p>
+    <p>HTML_iFrame = Boolean</p>
+    <p>IPsInURLs = Boolean</p>
     <form id="checkValues">
-        <input type="number" id="ArrinUrls" placeholder="ArrinUrls">
+        <input type="number" min="0" max="1" id="ArrinUrls" placeholder="ArrinUrls">
         <input type="number" id="Attachments" placeholder="Attachments">
         <input type="number" id="Css" placeholder="Css">
         <input type="number" id="Encoding" placeholder="Encoding">
         <input type="number" id="External_Resources" placeholder="External_Resources">
-        <input type="number" id="Flash_content" placeholder="Flash_content">
-        <input type="number" id="HTML_content" placeholder="HTML_content">
-        <input type="number" id="HTML_Form" placeholder="HTML_Form">
-        <input type="number" id="HTML_iFrame" placeholder="HTML_iFrame">
-        <input type="number" id="IPsInURLs" placeholder="IPsInURLs">
+        <input type="number" min="0" max="1" id="Flash_content" placeholder="Flash_content">
+        <br>
+        <input type="number" min="0" max="1" id="HTML_content" placeholder="HTML_content">
+        <input type="number" min="0" max="1" id="HTML_Form" placeholder="HTML_Form">
+        <input type="number" min="0" max="1" id="HTML_iFrame" placeholder="HTML_iFrame">
+        <input type="number" min="0" max="1" id="IPsInURLs" placeholder="IPsInURLs">
         <input type="number" id="Javascript" placeholder="Javascript">
         <input type="number" id="URLs" placeholder="URLs">
+        <br>    
         <input type="submit" value="Check">
+        <p>Tiempo de proceso promedio de 5 a 10 segundos</p>
     </form>
-
-    <p id="result">nothing yet</p>
+    <br>
 </body>
 
 </html>
@@ -71,8 +80,47 @@
             .then(response => response.json())
             .then(data => {
                 //make result and resul2 the return values 
-                document.getElementById('result').innerHTML = data.value
 
+                var NBdict = document.createElement("p")
+                var NBpred = document.createElement("p")
+                for(var i = 0; i < data.NBdict.length; i++){
+                    var NBdictSplit = document.createElement("p")
+                    NBdictSplit.innerHTML = data.NBdict[i][0] + ": " + data.NBdict[i][1]
+                    NBdict.appendChild(NBdictSplit)
+                }
+                NBpred.innerHTML = "Valor predicho por Naive Bayes (1 siendo True y 0 False): " + data.NBpred[data.NBpred.length - 1]
+                document.body.appendChild(NBdict)
+                document.body.appendChild(NBpred)
+
+                document.body.appendChild(document.createElement("br"))
+
+                var LGdict = document.createElement("p")
+                var LGpred = document.createElement("p")
+                for(var i = 0; i < data.LGdict.length; i++){
+                    var LGdictSplit = document.createElement("p")
+                    LGdictSplit.innerHTML = data.LGdict[i][0] + ": " + data.LGdict[i][1]
+                    LGdict.appendChild(LGdictSplit)
+                }
+                LGpred.innerHTML = "Valor predicho por Regresion Logistica (1 siendo True y 0 False): " + data.LGpred[data.LGpred.length - 1]
+                document.body.appendChild(LGdict)
+                document.body.appendChild(LGpred)
+
+                document.body.appendChild(document.createElement("br"))
+
+                var KNNdict = document.createElement("p")
+                var KNNpred = document.createElement("p")
+                for(var i = 0; i < data.KNNdict.length; i++){
+                    var KNNdictSplit = document.createElement("p")
+                    KNNdictSplit.innerHTML = data.KNNdict[i][0] + ": " + data.KNNdict[i][1]
+                    KNNdict.appendChild(KNNdictSplit)
+                }
+                KNNpred.innerHTML = "Valor predicho por KNN (1 siendo True y 0 False): " + data.KNNpred[data.KNNpred.length - 1]
+                document.body.appendChild(KNNdict)
+                document.body.appendChild(KNNpred)
+                
+                document.body.appendChild(document.createElement("br"))
+                document.body.appendChild(document.createElement("br"))
+                document.body.appendChild(document.createElement("br"))
             });
     });
 </script>
