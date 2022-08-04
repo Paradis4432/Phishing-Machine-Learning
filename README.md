@@ -22,7 +22,8 @@ Machine learning models, created with the goal of predicting if a message is phi
 
 If correct values are given this will produce first a message 
 ![Screenshot_23](https://user-images.githubusercontent.com/49301263/182963107-10eda09e-2e97-4e5e-b942-0da4a208bc4a.png)
-and a few graphs 
+and a few graphs
+
 ![NB_confusion_matrix](https://user-images.githubusercontent.com/49301263/182963138-5211127d-d679-47f9-ad82-461bce3b5b6e.png)
 ![KNN_confusion_matrix](https://user-images.githubusercontent.com/49301263/182963140-998ba0de-a503-40cc-99ff-d101ea65bfa9.png)
 ![LG_confusion_matrix](https://user-images.githubusercontent.com/49301263/182963141-afe7b7b1-a0f3-46dc-830e-c0e87c77cbdc.png)
