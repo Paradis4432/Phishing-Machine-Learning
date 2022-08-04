@@ -1,8 +1,26 @@
 # DHlastChallenge
 
-Tools Used:
+Tools Used for AI:
+- plotly
+- scikit-learn
+- matplotlib
+- numpy
+- pandas
+- seaborn
+
+Tools Used for Website:
+- node
+- javascript
+- ejs
+- html
+- flask for python server
+
+--------------
+Machine learning models, created with the goal of predicting if a message is phishing or not
+![Screenshot_22](https://user-images.githubusercontent.com/49301263/182955508-e7499466-b6bb-4681-8ae8-e8664faa51ec.png)
 
 
+--------------
 To initialize both servers its necessary to run 
 linkWebsitePython/main.py 
 Note: its mandatory to adapt the path in linkWebsitePython/main.py line 66
